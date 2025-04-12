@@ -1,0 +1,239 @@
+/* General body styling */
+body {
+    font-family: sans-serif;
+    background-color: #f8f9fa; /* Light grey background */
+}
+
+/* Login/Register Card */
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-item .edit-controls {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0; /* Initially hidden via opacity */
+    transition: opacity 0.2s ease-in-out;
+    /* display: none; Use JS to show/hide based on state */
+}
+
+/* Show ONLY on hover of USER messages that ARE NOT optimistic and NOT in edit mode */
+.message-item.user:not(.optimistic-message):hover .edit-controls:not(:has(+ .edit-area:not(.d-none))) {
+    opacity: 1;
+    /* display: inline-block; Use JS */
+}
+/* Or simplify and let JS handle the display: block/none on hover if needed */
+/* Let's rely on the JS in showEditMode and the initial style="display: none;" */
+
+.message-item .edit-area {
+    /* Keep .d-none class toggled by JS */
+    margin-top: 5px;
+}
+
+/* Ensure optimistic messages never show edit controls initially */
+.message-item.optimistic-message .edit-controls {
+    display: none !important;
+}
+
+/* Chat Layout */
+#chat-list-sidebar {
+    width: 280px; /* Fixed sidebar width */
+    min-width: 200px;
+    height: 100vh;
+}
+
+#chat-window {
+    background-color: #ffffff; /* White background for chat messages */
+    height: calc(100vh - 100px); /* Adjust based on input area height */
+}
+
+#message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Space between messages */
+    padding-bottom: 1rem; /* Padding at the bottom */
+}
+
+/* Individual Message Styling */
+.message-item {
+    max-width: 80%; /* Max width for message bubbles */
+    padding: 0.75rem 1rem;
+    border-radius: 15px;
+    word-wrap: break-word; /* Wrap long words */
+    position: relative; /* For regenerate button positioning */
+}
+
+.message-item.user {
+    background-color: #0d6efd; /* Bootstrap primary blue */
+    color: white;
+    border-bottom-right-radius: 5px;
+    align-self: flex-end; /* Align user messages to the right */
+    margin-left: auto; /* Push to the right */
+}
+
+.message-item.assistant {
+    background-color: #e9ecef; /* Light grey for assistant */
+    color: #212529; /* Dark text */
+    border-bottom-left-radius: 5px;
+    align-self: flex-start; /* Align assistant messages to the left */
+    margin-right: auto; /* Push to the left */
+}
+
+.message-item .timestamp {
+    font-size: 0.75em;
+    color: #adb5bd; /* Lighter text for timestamp */
+    display: block;
+    margin-top: 0.25rem;
+    text-align: right;
+}
+
+.message-item.user .timestamp {
+    color: #dee2e6; /* Even lighter for user messages */
+}
+
+/* Markdown/Code Formatting */
+.message-item pre {
+    background-color: #343a40; /* Dark background for code */
+    color: #f8f9fa; /* Light text for code */
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.message-item code:not(pre > code) { /* Inline code */
+    background-color: #d1ecf1;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 90%;
+}
+
+.message-item blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #6c757d;
+}
+
+.message-item ul, .message-item ol {
+    padding-left: 1.5rem; /* Indent lists */
+}
+
+/* Regenerate Button */
+.regenerate-button {
+    font-size: 0.8em;
+    padding: 0.1rem 0.4rem;
+    margin-left: 0.5rem;
+    /* position: absolute; */ /* Option 1: Absolute position */
+    /* bottom: 5px; */
+    /* right: 5px; */
+    margin-top: 5px;    /* Option 2: Place below content */
+    display: block;     /* Option 2: Make it block */
+    float: right;       /* Option 2: Float right */
+    clear: both;        /* Option 2: Ensure it doesn't overlap */
+}
+
+/* Chat Input Area */
+#chat-input-area {
+    min-height: 70px; /* Ensure some minimum height */
+    max-height: 150px; /* Prevent it from getting too tall */
+}
+
+#message-input {
+    resize: none; /* Disable manual resize */
+}
+
+/* Sidebar Active Chat */
+#chat-list .list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+    font-weight: bold;
+}
+
+
+.message-item .edit-controls {
+    position: absolute;
+    top: 5px;
+    right: 5px; /* Position near top right */
+    opacity: 0; /* Hide by default */
+    transition: opacity 0.2s ease-in-out;
+}
+
+.message-item.user:hover .edit-controls {
+    opacity: 1; /* Show on hover for user messages */
+}
+
+.message-item .edit-button {
+    padding: 0.1rem 0.3rem;
+    line-height: 1;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+    border: 1px solid #ccc;
+}
+.message-item .edit-button:hover {
+    background-color: rgba(230, 230, 230, 0.9);
+}
+
+.message-item .edit-area {
+    margin-top: 5px;
+}
+
+.message-item .edit-textarea {
+    min-height: 60px; /* Adjust as needed */
+    font-size: 0.9em; /* Slightly smaller font for editing */
+}
+
+/* Keep regenerate button visible */
+.message-item .action-buttons {
+    margin-top: 5px;
+    text-align: right; /* Align button(s) to the right */
+    clear: both;
+}
+
+/* Adjust if edit icon overlaps timestamp or regenerate */
+.message-item .timestamp {
+    /* Add some margin if needed */
+    /* margin-right: 30px;  Adjust if edit icon overlaps */
+    margin-top: 8px; /* Ensure space below content/buttons */
+}
+
+/* Ensure regenerate button doesn't get hidden when editing starts */
+.message-item .edit-area ~ .action-buttons {
+    display: none; /* Hide regenerate button while editing */
+}
+
+/* Adjust user message alignment slightly to accommodate potential icon */
+.message-item.user {
+    padding-right: 2rem; /* Add space on the right for the icon */
+}
+
+
+/* Utility */
+.overflow-auto {
+    overflow: auto;
+}
+
+/* Responsive adjustments if needed */
+@media (max-width: 768px) {
+    #chat-list-sidebar {
+        width: 100%; /* Full width on small screens */
+        height: auto; /* Auto height */
+        max-height: 40vh; /* Limit height */
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .d-flex.vh-100 {
+        flex-direction: column; /* Stack sidebar and chat window */
+        height: auto;
+        min-height: 100vh;
+    }
+    #chat-window {
+        height: calc(100vh - 40vh - 100px); /* Adjust height calculation */
+        min-height: 300px; /* Ensure minimum chat window height */
+    }
+    .message-item {
+        max-width: 90%; /* Slightly wider messages on mobile */
+    }
+}
