@@ -1,13 +1,12 @@
 $(document).ready(function() {
-
     // --- Login Form Handling ---
     $('#login-form').on('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
 
         const email = $('#email').val();
         const password = $('#password').val();
         const $errorMessage = $('#error-message');
-        $errorMessage.addClass('d-none').text(''); // Hide error message initially
+        $errorMessage.addClass('d-none').text('');
 
         $.ajax({
             url: '/api/auth/login',
@@ -17,9 +16,7 @@ $(document).ready(function() {
             success: function(response) {
                 console.log('Login successful:', response);
                 if (response.accessToken) {
-                    // Store the token (e.g., in localStorage)
                     localStorage.setItem('jwtToken', response.accessToken);
-                    // Redirect to the chat page
                     window.location.href = '/chat';
                 } else {
                     $errorMessage.text('Login failed: No token received.').removeClass('d-none');
@@ -31,11 +28,10 @@ $(document).ready(function() {
                 if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
                     errorMsg = jqXHR.responseJSON.message;
                 } else if (jqXHR.responseText) {
-                    try { // Try to parse if it's JSON even if content type wasn't set right
+                    try {
                         const errData = JSON.parse(jqXHR.responseText);
                         if (errData.message) errorMsg = errData.message;
-                    } catch(e) {
-                        // If responseText isn't JSON or has other issues
+                    } catch (e) {
                         if (jqXHR.status === 401) {
                             errorMsg = 'Incorrect email or password.';
                         }
@@ -48,7 +44,7 @@ $(document).ready(function() {
 
     // --- Registration Form Handling ---
     $('#register-form').on('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
 
         const email = $('#email').val();
         const password = $('#password').val();
@@ -61,7 +57,7 @@ $(document).ready(function() {
 
         if (password !== confirmPassword) {
             $errorMessage.text('Passwords do not match.').removeClass('d-none');
-            return; // Stop submission
+            return;
         }
 
         if (password.length < 6) {
@@ -77,10 +73,9 @@ $(document).ready(function() {
             success: function(response) {
                 console.log('Registration successful:', response);
                 $successMessage.text('Registration successful! You can now log in.').removeClass('d-none');
-                // Optional: Clear form or redirect to login after a delay
                 $('#register-form')[0].reset();
                 setTimeout(function() {
-                    // window.location.href = '/login'; // Redirect to login
+                    // window.location.href = '/login';
                 }, 2000);
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -92,12 +87,11 @@ $(document).ready(function() {
                     try {
                         const errData = JSON.parse(jqXHR.responseText);
                         if (errData.message) errorMsg = errData.message;
-                        // Handle specific validation errors if backend provides them
                         else if (errData.errors) {
                             errorMsg = Object.values(errData.errors).join(' ');
                         }
                     } catch (e) {
-                        if (jqXHR.status === 400) { // Bad Request often means validation error like duplicate email
+                        if (jqXHR.status === 400) {
                             errorMsg = 'Registration failed. The email might already be in use.';
                         }
                     }
@@ -106,5 +100,4 @@ $(document).ready(function() {
             }
         });
     });
-
 });

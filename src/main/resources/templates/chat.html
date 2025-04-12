@@ -3,52 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPT Chat</title>
+    <title>Grok Chat</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Highlight.js Theme (choose one, e.g., github-dark, default, atom-one-dark) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <!-- Highlight.js Theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <style>
-        /* Ensure code blocks wrap correctly */
-        pre code.hljs {
-            white-space: pre-wrap;       /* Allow wrapping */
-            word-break: break-all;   /* Break long words/identifiers */
-        }
-    </style>
 </head>
 <body>
 <div class="d-flex vh-100">
     <!-- Sidebar -->
-    <nav id="chat-list-sidebar" class="bg-light border-end p-3 d-flex flex-column">
-        <h5 class="mb-3">Chats</h5>
-        <button id="new-chat-btn" class="btn btn-primary btn-sm mb-3">New Chat</button>
+    <nav id="chat-list-sidebar" class="bg-dark border-end border-secondary p-3 d-flex flex-column">
+        <h5 class="text-light mb-3 animate__animated animate__fadeIn">Chats</h5>
+        <button id="new-chat-btn" class="btn btn-primary btn-sm mb-3 animate__animated animate__pulse animate__infinite">New Chat</button>
         <div class="list-group list-group-flush flex-grow-1 overflow-auto" id="chat-list">
-            <!-- Chat items will be loaded here by JavaScript -->
-            <!-- Example using Thymeleaf if chats are passed from controller -->
+            <!-- Chat items -->
             <a th:each="chat : ${chats}"
                th:href="@{'/chat#' + ${chat.id}}"
                th:attr="data-chat-id=${chat.id}"
-               class="list-group-item list-group-item-action chat-list-item"
+               class="list-group-item list-group-item-action bg-dark text-light border-secondary animate__animated animate__fadeInUp chat-list-item"
                aria-current="true">
-                Chat <span th:text="${chat.id}">1</span> (<small th:text="${#temporals.format(chat.createdAt, 'yyyy-MM-dd HH:mm')}">date</small>)
+                Chat <span th:text="${chat.id}">1</span>
+                <small class="text-muted" th:text="${#temporals.format(chat.createdAt, 'yyyy-MM-dd HH:mm')}">date</small>
             </a>
         </div>
-        <div class="mt-auto pt-3 border-top">
-            <p class="text-muted small" th:if="${userEmail}">Logged in as: <strong th:text="${userEmail}">user@example.com</strong></p>
-            <button id="logout-btn" class="btn btn-danger btn-sm w-100">Logout</button>
+        <div class="mt-auto pt-3 border-top border-secondary">
+            <p class="text-muted small" th:if="${userEmail}">
+                Logged in as: <strong class="text-light" th:text="${userEmail}">user@example.com</strong>
+            </p>
+            <button id="logout-btn" class="btn btn-outline-danger btn-sm w-100 animate__animated animate__bounceIn">Logout</button>
         </div>
     </nav>
 
     <!-- Main Chat Area -->
-    <div class="flex-grow-1 d-flex flex-column p-0">
+    <div class="flex-grow-1 d-flex flex-column p-0 bg-dark">
         <!-- Chat Window -->
-        <div id="chat-window" class="flex-grow-1 p-3 overflow-auto bg-white position-relative">
+        <div id="chat-window" class="flex-grow-1 p-3 overflow-auto bg-dark position-relative">
             <div id="message-list">
-                <!-- Messages will be loaded here -->
-                <div class="text-center text-muted mt-5" id="no-chat-selected">
-                    <p>Select a chat from the sidebar or start a new one.</p>
+                <!-- Messages -->
+                <div class="text-center text-muted mt-5 animate__animated animate__fadeIn" id="no-chat-selected">
+                    <p>Select a chat or start a new one.</p>
                 </div>
             </div>
             <!-- Loading Indicator -->
@@ -58,17 +53,17 @@
                 </div>
             </div>
             <!-- Error Display -->
-            <div id="chat-error" class="alert alert-danger d-none position-sticky bottom-0 start-0 m-3" role="alert">
+            <div id="chat-error" class="alert alert-danger d-none position-sticky bottom-0 start-0 m-3 animate__animated animate__shakeX" role="alert">
                 Error loading messages.
             </div>
         </div>
 
         <!-- Input Area -->
-        <div id="chat-input-area" class="p-3 border-top bg-light">
-            <div id="input-error" class="alert alert-warning d-none small p-2 mb-2" role="alert"></div>
+        <div id="chat-input-area" class="p-3 border-top border-secondary bg-dark">
+            <div id="input-error" class="alert alert-warning d-none small p-2 mb-2 animate__animated animate__shakeX" role="alert"></div>
             <form id="message-form" class="d-flex">
-                <textarea id="message-input" class="form-control me-2" rows="2" placeholder="Type your message..." required></textarea>
-                <button id="send-button" type="submit" class="btn btn-success align-self-end">Send</button>
+                <textarea id="message-input" class="form-control me-2 bg-dark text-light border-secondary animate__animated animate__fadeIn" rows="2" placeholder="Type your message..."></textarea>
+                <button id="send-button" type="submit" class="btn btn-primary align-self-end animate__animated animate__bounceIn">Send</button>
             </form>
         </div>
     </div>
@@ -81,10 +76,8 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <!-- Highlight.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<!-- Optional: Load languages you need, or use highlight.min.js which includes common ones -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script> -->
-<!-- <script>hljs.highlightAll();</script> --> <!-- Call after DOM ready if needed, but we'll call it dynamically -->
-
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <!-- Custom Chat JS -->
 <script th:src="@{/js/chat.js}"></script>
 </body>
