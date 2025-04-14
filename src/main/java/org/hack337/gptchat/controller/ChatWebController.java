@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication; // Import
+import org.springframework.security.core.context.SecurityContextHolder; // Import
 
 @Controller
 @RequiredArgsConstructor
@@ -47,11 +51,8 @@ public class ChatWebController {
     // Redirect root to chat page if logged in, otherwise login
     @GetMapping("/")
     public String indexPage() {
-        try {
-            userService.getCurrentUser(); // Check if logged in
-            return "redirect:/chat";
-        } catch (Exception e) {
-            return "redirect:/login";
-        }
+        return "redirect:/chat";
     }
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ChatApiController.class);
 }

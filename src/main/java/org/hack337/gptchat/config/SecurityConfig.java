@@ -87,7 +87,9 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/h2-console/**"),
                                 new AntPathRequestMatcher("/favicon.ico"),
                                 // Error endpoint
-                                new AntPathRequestMatcher("/error")
+                                new AntPathRequestMatcher("/error"),
+                                new AntPathRequestMatcher("/")
+
                         ).permitAll()
                         // Secure the CHAT *API* endpoints
                         .requestMatchers(
