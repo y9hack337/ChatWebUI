@@ -18,7 +18,7 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Lazy fetch user unless needed
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -26,11 +26,9 @@ public class Chat {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // Consider adding a title field if needed
-    // private String title;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) // Eager fetch messages for chat history
-    @OrderBy("timestamp ASC") // Ensure messages are ordered
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("timestamp ASC")
     private List<Message> messages = new ArrayList<>();
 
     public Chat(User user) {

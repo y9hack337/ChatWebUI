@@ -9,5 +9,4 @@ import lombok.Data;
 public class RegisterRequest {
     @NotBlank @Email private String email;
     @NotBlank @Size(min = 6) private String password;
-    // Add password confirmation field if needed for UI validation
 }

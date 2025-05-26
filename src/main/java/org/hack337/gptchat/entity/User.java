@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "app_user", uniqueConstraints = { // "user" is often a reserved keyword
+@Table(name = "app_user", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
 @Data
@@ -29,9 +29,9 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(min = 6) // Add more robust password policies
+    @Size(min = 6)
     @Column(nullable = false)
-    private String password; // Store encoded password
+    private String password;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -39,7 +39,6 @@ public class User {
 
     private LocalDateTime lastLogin;
 
-    // Optional: Link to chats initiated by this user
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> chats = new ArrayList<>();
 

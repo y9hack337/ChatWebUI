@@ -26,8 +26,8 @@ import java.util.Optional;
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
-    private final UserDetailsServiceImpl userDetailsService; // Use our service
-    private final UserRepository userRepository; // Inject UserRepository
+    private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
     private SecretKey key;
 
     @PostConstruct
@@ -62,10 +62,10 @@ public class JwtTokenProvider {
     }
 
     public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser() // Start builder
-                .setSigningKey(key)        // Set key
-                .build()                   // <<--- ADD .build() HERE
-                .parseClaimsJws(token)     // Parse using the built parser
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
 
         return Long.parseLong(claims.getSubject());
@@ -73,10 +73,10 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser() // Start builder
-                    .setSigningKey(key)    // Set key
-                    .build()               // <<--- ADD .build() HERE
-                    .parseClaimsJws(authToken); // Parse using the built parser
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");

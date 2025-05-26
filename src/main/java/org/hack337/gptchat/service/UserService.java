@@ -20,7 +20,7 @@ public class UserService {
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
         } else if (principal instanceof String) {
-            username = (String) principal; // Should not happen with JWT typically
+            username = (String) principal;
         }
         else {
             throw new IllegalStateException("Unexpected principal type: " + principal.getClass());

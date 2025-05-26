@@ -28,8 +28,8 @@ public class Message {
     private Role role;
 
     @NotBlank
-    @Lob // Use Lob for potentially long content
-    @Column(nullable = false, columnDefinition = "TEXT") // Explicitly TEXT for larger content
+    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp

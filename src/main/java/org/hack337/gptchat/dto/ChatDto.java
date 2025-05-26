@@ -10,5 +10,4 @@ public class ChatDto {
     private Long userId;
     private LocalDateTime createdAt;
     private List<MessageDto> messages;
-    // private String title; // if added
 }

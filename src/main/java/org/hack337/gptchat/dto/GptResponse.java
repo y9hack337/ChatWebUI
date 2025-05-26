@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GptResponse {
     private String answer;
-    private String type; // "text"
+    private String type;
 }

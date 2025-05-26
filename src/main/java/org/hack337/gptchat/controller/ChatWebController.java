@@ -17,7 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder; // Impor
 public class ChatWebController {
 
     private final UserService userService;
-    private final ChatService chatService; // Inject ChatService
+    private final ChatService chatService;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -29,26 +29,18 @@ public class ChatWebController {
         return "register"; // Return view name templates/register.html
     }
 
-    // Main chat UI page
     @GetMapping("/chat")
     public String chatPage(Model model) {
-        // Maybe load initial chat data here if needed for SSR
-        // Example: Load list of user's chats for the sidebar
         try {
             User currentUser = userService.getCurrentUser();
             model.addAttribute("userEmail", currentUser.getEmail());
             model.addAttribute("chats", chatService.getUserChats(currentUser));
         } catch (Exception e) {
-            // Handle cases where user might not be logged in yet or error occurs
-            // Redirect to login or show an error state?
-            // For now, just log it and proceed to render the basic page
             System.err.println("Could not load user data for chat page: " + e.getMessage());
-            // return "redirect:/login"; // Option: redirect if not logged in
         }
-        return "chat"; // Return view name templates/chat.html
+        return "chat";
     }
 
-    // Redirect root to chat page if logged in, otherwise login
     @GetMapping("/")
     public String indexPage() {
         return "redirect:/chat";

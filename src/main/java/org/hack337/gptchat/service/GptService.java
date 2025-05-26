@@ -5,7 +5,7 @@ import org.hack337.gptchat.dto.GptRequest;
 import org.hack337.gptchat.entity.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders; // Import HttpHeaders
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -40,7 +40,6 @@ public class GptService {
             return Mono.error(new IllegalArgumentException("Chat history cannot be empty for GPT request"));
         }
 
-        // Convert entity Messages to DTO MessagePayloads
         List<GptRequest.MessagePayload> messagePayloads = chatHistory.stream()
                 .map(msg -> new GptRequest.MessagePayload(
                         msg.getRole().name().toLowerCase(), // Convert enum to lowercase string
@@ -49,10 +48,9 @@ public class GptService {
 
         GptRequest gptRequest = new GptRequest(gptModel, messagePayloads);
 
-        log.debug("Sending request to GPT API (model: {})", gptModel); // Avoid logging the full request potentially containing sensitive info
+        log.debug("Sending request to GPT API (model: {})", gptModel);
 
         return webClient.post()
-                // .uri(gptApiUrl) // Not needed if baseUrl is set correctly
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(gptRequest)
                 .retrieve()
@@ -68,7 +66,6 @@ public class GptService {
                 })
                 .doOnError(error -> {
                     if (error instanceof WebClientResponseException webEx) {
-                        // Log status code and potentially the body (be careful with sensitive data)
                         log.error("Error calling GPT API: Status {}, Body: '{}'", webEx.getStatusCode(), webEx.getResponseBodyAsString(), webEx);
                     } else if (error instanceof GptApiException) {
                         log.error("GPT API processing error: {}", error.getMessage()); // Avoid logging stack trace twice
@@ -81,7 +78,6 @@ public class GptService {
                         new GptApiException("GPT API request failed with status " + ex.getStatusCode() + ". Check API key and request format.", ex)
                 )
                 .onErrorMap(Exception.class, ex -> {
-                    // Avoid wrapping GptApiException again
                     if (ex instanceof GptApiException) {
                         return ex;
                     }
@@ -89,7 +85,6 @@ public class GptService {
                 });
     }
 
-    // --- Custom Exception ---
     public static class GptApiException extends RuntimeException {
         public GptApiException(String message) {
             super(message);

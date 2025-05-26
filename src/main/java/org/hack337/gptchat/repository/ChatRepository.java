@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     List<Chat> findByUserOrderByCreatedAtDesc(User user);
 
-    // Ensure user owns the chat when fetching by ID
     @Query("SELECT c FROM Chat c LEFT JOIN FETCH c.messages WHERE c.id = :chatId AND c.user.id = :userId")
     Optional<Chat> findByIdAndUserIdWithMessages(Long chatId, Long userId);
 

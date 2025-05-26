@@ -54,7 +54,7 @@ public class AuthService {
         // Update last login time
         userRepository.findByEmail(authRequest.getEmail()).ifPresent(user -> {
             user.setLastLogin(LocalDateTime.now());
-            userRepository.save(user); // Save the updated user
+            userRepository.save(user);
         });
 
 

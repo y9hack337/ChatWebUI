@@ -26,7 +26,7 @@ public class AuthController {
         try {
             JwtResponse jwtResponse = authService.loginUser(loginRequest);
             return ResponseEntity.ok(jwtResponse);
-        } catch (Exception e) { // Catch specific auth exceptions ideally
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed: " + e.getMessage());
         }
     }
@@ -35,7 +35,6 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             User user = authService.registerUser(registerRequest);
-            // Return simple message or user details (excluding password)
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully! Email: " + user.getEmail());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

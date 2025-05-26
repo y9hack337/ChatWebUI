@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SendMessageResponse {
-    private MessageDto userMessage; // The user message that was just persisted
-    private MessageDto assistantMessage; // The assistant's response
+    private MessageDto userMessage;
+    private MessageDto assistantMessage;
 }

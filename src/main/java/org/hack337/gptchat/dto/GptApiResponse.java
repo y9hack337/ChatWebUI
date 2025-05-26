@@ -20,12 +20,11 @@ public class GptApiResponse {
     private UsageInfo usage;
     private List<Choice> choices;
 
-    // Nested class for the 'usage' object
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     @NoArgsConstructor
     public static class UsageInfo {
-        @JsonProperty("prompt_tokens") // Maps JSON snake_case to Java camelCase
+        @JsonProperty("prompt_tokens")
         private Integer promptTokens;
 
         @JsonProperty("completion_tokens")
@@ -35,7 +34,6 @@ public class GptApiResponse {
         private Integer totalTokens;
     }
 
-    // Nested class for objects inside the 'choices' array
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     @NoArgsConstructor
@@ -48,7 +46,6 @@ public class GptApiResponse {
         private Integer index;
     }
 
-    // Nested class for the 'message' object inside a 'choice'
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     @NoArgsConstructor
@@ -57,7 +54,6 @@ public class GptApiResponse {
         private String content;
     }
 
-    // Helper method to easily extract the main content (handle potential errors)
     public String getFirstChoiceContent() {
         if (choices != null && !choices.isEmpty()) {
             Choice firstChoice = choices.get(0);
@@ -65,11 +61,9 @@ public class GptApiResponse {
                 return firstChoice.getMessage().getContent();
             }
         }
-        // Return null or throw an exception if the structure is unexpected or content is missing
         log.warn("Could not extract content from GPT API response structure: {}", this);
         return null;
     }
 
-    // Add a static logger if using the helper method above
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GptApiResponse.class);
 }

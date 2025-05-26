@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "jwt")
 @Getter
 @Setter
-@Validated // Enable validation
+@Validated
 public class JwtProperties {
     @NotBlank(message = "JWT secret cannot be blank")
     private String secret;
