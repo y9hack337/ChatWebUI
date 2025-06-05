@@ -1,68 +1,177 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Chat - ChatApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/js/chat.js"></script>
+    <style>
+        .d-none {
+            display: none !important;
+        }
+        .spinner-border {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            vertical-align: text-bottom;
+            border: 0.25em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border 0.75s linear infinite;
+        }
+        .spinner-border-sm {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-width: 0.2em;
+        }
+        @keyframes spinner-border {
+            to { transform: rotate(360deg); }
+        }
+        .message-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .message-item.user {
+            background-color: #374151;
+        }
+        .message-item.assistant {
+            background-color: #1f2937;
+        }
+        .message-content {
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        .edit-controls, .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .edit-area {
+            margin-top: 0.5rem;
+        }
+        .timestamp {
+            margin-left: auto;
+        }
+        .chat-list-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #374151;
+            background-color: #1f2937;
+            color: #f3f4f6;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .chat-list-item:hover {
+            background-color: #374151;
+        }
+        .chat-list-item.active {
+            background-color: #4b5563;
+        }
+        @media (max-width: 767px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 50;
+                display: none;
+                background-color: #1f2937;
+            }
+            #sidebar.show {
+                display: block;
+            }
+            #chat-window {
+                padding: 1rem;
+            }
+            .message-item {
+                padding: 0.75rem;
+            }
+            .message-content {
+                font-size: 0.9rem;
+            }
+            .edit-controls button, .action-buttons button {
+                padding: 0.5rem;
+            }
+            #message-input {
+                font-size: 1rem;
+            }
+            #send-button {
+                padding: 0.75rem 1.5rem;
+            }
+        }
+    </style>
 </head>
-<body>
-<div class="d-flex vh-100">
-    <nav id="chat-list-sidebar" class="bg-dark border-end border-secondary p-3 d-flex flex-column">
-        <h5 class="text-light mb-3 animate__animated animate__fadeIn">Chats</h5>
-        <button id="new-chat-btn" class="btn btn-primary btn-sm mb-3 animate__animated animate__pulse animate__infinite">New Chat</button>
-        <div class="list-group list-group-flush flex-grow-1 overflow-auto" id="chat-list">
-            <a th:each="chat : ${chats}"
-               th:href="@{'/chat#' + ${chat.id}}"
-               th:attr="data-chat-id=${chat.id}"
-               class="list-group-item list-group-item-action bg-dark text-light border-secondary animate__animated animate__fadeInUp chat-list-item"
-               aria-current="true">
-                Chat <span th:text="${chat.id}">1</span>
-                <small class="text-muted" th:text="${#temporals.format(chat.createdAt, 'yyyy-MM-dd HH:mm')}">date</small>
-            </a>
+<body class="bg-gray-900 text-gray-100">
+    <div class="flex h-screen">
+        <div id="sidebar" class="w-64 bg-gray-800 p-4 flex flex-col shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Chats</h2>
+                <button id="close-sidebar" class="md:hidden text-gray-400 hover:text-gray-200 transition duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="chat-list" class="flex-1 overflow-y-auto"></div>
+            <button id="new-chat-btn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">New Chat</button>
+            <button id="logout-btn" class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200">Logout</button>
         </div>
-        <div class="mt-auto pt-3 border-top border-secondary">
-            <p class="text-muted small" th:if="${userEmail}">
-                Logged in as: <strong class="text-light" th:text="${userEmail}">user@example.com</strong>
-            </p>
-            <button id="logout-btn" class="btn btn-outline-danger btn-sm w-100 animate__animated animate__bounceIn">Logout</button>
-        </div>
-    </nav>
-
-    <div class="flex-grow-1 d-flex flex-column p-0 bg-dark">
-        <div id="chat-window" class="flex-grow-1 p-3 overflow-auto bg-dark position-relative">
-            <div id="message-list">
-                <div class="text-center text-muted mt-5 animate__animated animate__fadeIn" id="no-chat-selected">
-                    <p>Select a chat or start a new one.</p>
+        <div class="flex-1 flex flex-col">
+            <div id="chat-header" class="p-4 bg-gray-700 flex justify-between items-center shadow-md">
+                <button id="toggle-sidebar" class="md:hidden text-gray-400 hover:text-gray-200 transition duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <h3 class="text-lg font-semibold">Chat Title</h3>
+            </div>
+            <div id="chat-window" class="flex-1 overflow-y-auto p-4">
+                <div id="no-chat-selected" class="text-center text-gray-500 hidden">
+                    <p>Select a chat or create a new one to start chatting.</p>
                 </div>
-            </div>
-            <div id="loading-indicator" class="position-absolute top-50 start-50 translate-middle d-none">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                <div id="message-list" class="space-y-4"></div>
+                <div id="loading-indicator" class="text-center text-gray-500 hidden">
+                    <span class="spinner-border spinner-border-sm"></span> Loading...
                 </div>
+                <div id="chat-error" class="text-red-500 text-sm hidden"></div>
             </div>
-            <div id="chat-error" class="alert alert-danger d-none position-sticky bottom-0 start-0 m-3 animate__animated animate__shakeX" role="alert">
-                Error loading messages.
-            </div>
-        </div>
-
-        <div id="chat-input-area" class="p-3 border-top border-secondary bg-dark">
-            <div id="input-error" class="alert alert-warning d-none small p-2 mb-2 animate__animated animate__shakeX" role="alert"></div>
-            <form id="message-form" class="d-flex">
-                <textarea id="message-input" class="form-control me-2 bg-dark text-light border-secondary animate__animated animate__fadeIn" rows="2" placeholder="Type your message..."></textarea>
-                <button id="send-button" type="submit" class="btn btn-primary align-self-end animate__animated animate__bounceIn">Send</button>
+            <form id="message-form" class="p-4 bg-gray-800 shadow-lg">
+                <div class="flex space-x-2">
+                    <input type="text" id="message-input" class="flex-1 px-3 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Type your message...">
+                    <button type="submit" id="send-button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">Send</button>
+                </div>
+                <div id="input-error" class="text-red-500 text-sm mt-2 hidden"></div>
             </form>
         </div>
     </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<script th:src="@{/js/chat.js}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#toggle-sidebar').on('click', function() {
+                $('#sidebar').toggleClass('show');
+            });
+            $('#close-sidebar').on('click', function() {
+                $('#sidebar').removeClass('show');
+            });
+            $('#chat-list').on('click', '.chat-list-item', function() {
+                if ($(window).width() < 768) {
+                    $('#sidebar').removeClass('show');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
