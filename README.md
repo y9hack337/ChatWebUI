@@ -7,7 +7,7 @@
 
 # CHATWEBUI
 
-<em>Empowering Conversations with Intelligent AI Interaction</em>
+<em>Empowering Conversations with AI Interaction</em>
 
 <div align="center">
 <p>Choose your language:</p>
@@ -59,48 +59,7 @@
 
 ## Overview
 
-ChatWebUI is a powerful chat application framework that empowers developers to create sophisticated chat interfaces with ease. It combines modern tech stacks and user-friendly features to deliver a seamless conversational experience.
-
-**Why ChatWebUI?**
-
-This project aims to enhance chat application development by providing a robust, secure, and flexible environment. The core features include:
-
-- **🗝️ Secure User Authentication:** Enjoy peace of mind with JWT-based security, ensuring user credentials are kept safe.
-- **💬 Dynamic Chat Functionality:** Engage users in real-time conversations with streamlined message exchanges.
-- **🔧 Customizable Architecture:** Easily adapt and extend the framework to suit specific project needs.
-- **🐞 Centralized Error Handling:** Simplify debugging with consistent exception management designed for developers.
-- **🎨 UI Enhancements with Tailwind CSS:** Build responsive and attractive user interfaces quickly and effectively.
-
----
-
-## Features
-
-|      | Component       | Details                              |
-| :--- | :-------------- | :----------------------------------- |
-| ⚙️  | **Architecture**  | <ul><li>Microservices-oriented</li><li>Text-based chat protocol</li></ul> |
-| 🔩 | **Code Quality**  | <ul><li>Gradle build scripts</li><li>Consistent Java style guidelines</li></ul> |
-| 📄 | **Documentation** | <ul><li>Project README available</li><li>API documentation generation planned</li></ul> |
-| 🔌 | **Integrations**  | <ul><li>Integrates with Spring Framework</li><li>Uses WebJars for managing frontend dependencies</li></ul> |
-| 🧩 | **Modularity**    | <ul><li>Modular structure for services</li><li>Reusable components (Kotlin-based)</li></ul> |
-| 🧪 | **Testing**       | <ul><li>JUnit for unit testing</li><li>Integration tests using Spring Test</li></ul> |
-| ⚡️  | **Performance**   | <ul><li>Optimized for low latency</li><li>Asynchronous message handling</li></ul> |
-| 🛡️ | **Security**      | <ul><li>JWT for authentication</li><li>Secure WebSocket implementation</li></ul> |
-| 📦 | **Dependencies**  | <ul><li>Core dependencies: Gradle, Java, Spring</li><li>Multiple WebJars for frontend libraries: Bootstrap, jQuery</li></ul> |
-| 🚀 | **Scalability**   | <ul><li>Horizontal scaling with microservices</li><li>Supports multiple client connections</li></ul> |
-
-
-### Explanations of the Table Components
-
-- **Architecture**: Focuses on the underlying structure and approach (microservices and text-based chat).
-- **Code Quality**: Highlights the use of Gradle and coding standards in Kotlin.
-- **Documentation**: Indicates that a README is present, with plans for further API documentation.
-- **Integrations**: Lists critical integrations, mainly the Spring Framework and WebJars for handling frontend resources.
-- **Modularity**: Points to the structured design for better usability and reusability.
-- **Testing**: Mentions unit and integration testing frameworks to ensure software reliability.
-- **Performance**: Briefly outlines optimizations for message handling speed.
-- **Security**: Describes the implementation of JWT and secure WebSocket communication.
-- **Dependencies**: Provides insights into the critical libraries and frameworks in use.
-- **Scalability**: Conveys the project's ability to scale effectively via microservices.
+ChatWebUI is a user-friendly chat application with reliable data storage, secure authentication, and built-in ChatGPT support.
 
 ---
 
@@ -524,9 +483,9 @@ Build ChatWebUI from the source and intsall dependencies:
 
 2. **Navigate to the project directory:**
 
-    ```sh
-    ❯ cd ChatWebUI
-    ```
+```sh
+❯ cd ChatWebUI
+```
 
 3. **Install the dependencies:**
 
@@ -536,11 +495,9 @@ Build ChatWebUI from the source and intsall dependencies:
 <!-- [gradle-shield]: https://img.shields.io/badge/Gradle-02303A.svg?style={badge_style}&logo=gradle&logoColor=white -->
 <!-- [gradle-link]: https://gradle.org/ -->
 
-	**Using [gradle](https://gradle.org/):**
-
-	```sh
-	❯ gradle build
-	```
+```sh
+❯ gradle build
+```
 
 ### Usage
 
@@ -562,31 +519,6 @@ gradle test
 
 - **💬 [Join the Discussions](https://github.com/y9hack337/ChatWebUI/discussions)**: Share your insights, provide feedback, or ask questions.
 - **🐛 [Report Issues](https://github.com/y9hack337/ChatWebUI/issues)**: Submit bugs found or log feature requests for the `ChatWebUI` project.
-
-<details closed>
-<summary>Contributing Guidelines</summary>
-
-1. **Fork the Repository**: Start by forking the project repository to your LOCAL account.
-2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
-   ```sh
-   git clone ChatWebUI
-   ```
-3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
-   ```sh
-   git checkout -b new-feature-x
-   ```
-4. **Make Your Changes**: Develop and test your changes locally.
-5. **Commit Your Changes**: Commit with a clear message describing your updates.
-   ```sh
-   git commit -m 'Implemented new feature x.'
-   ```
-6. **Push to LOCAL**: Push the changes to your forked repository.
-   ```sh
-   git push origin new-feature-x
-   ```
-7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
-8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your contribution!
-</details>
 
 <details closed>
 <summary>Contributor Graph</summary>
